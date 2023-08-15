@@ -8,8 +8,13 @@ class PositionAdmin(admin.ModelAdmin):
 
 @admin.register(Experience)
 class ExperienceAdmin(admin.ModelAdmin):
-    list_display = ('title', 'employer', 'from_date', 'to_date')
+    list_display = ('title', 'employer', 'from_date', 'to_date', 'onboarding_request_name')
     search_fields = ('title', 'employer')
+
+    def onboarding_request_name(self, obj):
+        return obj.onboarding_request.name if obj.onboarding_request else None
+
+    onboarding_request_name.short_description = 'On-Boarding Request Employee Name'
 
 class ExperienceInline(admin.TabularInline):  # Displaying Experiences as inline within OnBoardingRequestAdmin
     model = Experience
