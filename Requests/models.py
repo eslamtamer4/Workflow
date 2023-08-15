@@ -16,3 +16,4 @@ class Request(models.Model):
 
     def __str__(self):
         return f"Request #{self.ID} - {self.Submitter.username} to {self.Receiver.username} ({self.Status})"
+    

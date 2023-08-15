@@ -21,10 +21,9 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             token, _ = Token.objects.get_or_create(user=user)
-            # print(token)
             return Response({"token": token.key})
         else:
-            return Response({"error": "Wrong password"}, status=400)
+            return Response({"error"}, status=400)
     else:
         return Response({"error": "User does not exist"}, status=400)
 

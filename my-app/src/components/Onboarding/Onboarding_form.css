@@ -1,0 +1,69 @@
+/* Styles for the OnboardingForm */
+.onboarding-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Apply the styles to individual form fields */
+  .onboarding-form label {
+    font-weight: bold;
+  }
+  
+  .onboarding-form input,
+  .onboarding-form select,
+  .onboarding-form textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .onboarding-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .onboarding-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Additional styling for specific fields */
+  .onboarding-form .experience-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .onboarding-form .experience-field {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .onboarding-form .experience-field input {
+    flex: 1;
+  }
+  
+  .onboarding-form .add-experience-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .onboarding-form .add-experience-button:hover {
+    background-color: #45a049;
+  }
+  

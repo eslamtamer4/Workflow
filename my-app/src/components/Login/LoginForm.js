@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 import "./LoginForm.css"; // Import your CSS file
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,9 +22,9 @@ const LoginForm = () => {
         }
       );
 
-      const token = response.data.token;
-      localStorage.setItem("authToken", token);
-      toast.success("Login successful!");
+    //   const token = response.data.token;
+    //   localStorage.setItem("authToken", token);
+      navigate("/home");
     } catch (error) {
       toast.error("Invalid credentials");
     }

@@ -13,6 +13,7 @@ class User(AbstractUser):
     Is_active = models.BooleanField(default=True, null=False)
     Created_date = models.DateTimeField(default=timezone.now)
     Modified_date = models.DateTimeField(auto_now=True)
+    Is_HR= models.BooleanField(default=False, null=False)
 
 User._meta.get_field('groups').remote_field.related_name = 'custom_user_set'
 User._meta.get_field('user_permissions').remote_field.related_name = 'custom_user_set'
