@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-
+from Users.models import User
 from django.db import models
 
 GENDER_CHOICES = [
@@ -17,6 +17,11 @@ MARITAL_STATUS_CHOICES = [
         ('married', 'Married'),
         ('divorced', 'Divorced'),
         ('single', 'Single'),
+    ]
+STATUS_CHOICES = [
+        ('ACCEPT', 'Accept'),
+        ('REJECT', 'Reject '),
+        ('PENDING', 'Pending'),
     ]
 
 
@@ -47,6 +52,11 @@ class On_Boarding_Request(models.Model):
     referred_by = models.CharField(max_length=50, verbose_name='Referred By')
     expected_salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Expected Salary')
     notice_period = models.CharField(max_length=20, verbose_name='Notice Period')
+    Assigned_to = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    HR_comment=models.TextField(verbose_name='HR Comment',null=True)
+    Technical_comment=models.TextField(verbose_name='Technical Comment',null=True)
+    Status= models.CharField(max_length=50, choices=STATUS_CHOICES, verbose_name='Status',default='PENDING')
+
 
     def __str__(self):
         return self.name
