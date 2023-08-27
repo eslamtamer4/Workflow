@@ -22,8 +22,8 @@ const LoginForm = () => {
         }
       );
 
-    //   const token = response.data.token;
-    //   localStorage.setItem("authToken", token);
+      const token = response.data.token;
+      localStorage.setItem("token", token);
       navigate("/home");
     } catch (error) {
       toast.error("Invalid credentials");

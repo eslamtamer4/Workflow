@@ -39,6 +39,9 @@ class OnBoardingRequestAdmin(admin.ModelAdmin):
         ('Job Application', {
             'fields': ('position_applying_for',)  # Remove 'job_experience' here
         }),
+        ('Approvals', {
+            'fields': ('Assigned_to','HR_comment','Technical_comment','Status')  # Remove 'job_experience' here
+        }),
         ('Other Information', {
             'fields': ('current_employer_benefits', 'education', 'references', 'referred_by', 'expected_salary', 'notice_period')
         }),

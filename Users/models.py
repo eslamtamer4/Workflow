@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractUser
 # Remove the custom User model definition
 
 class User(AbstractUser):
-    ID = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     Firstname = models.CharField(max_length=30, null=False)
     Lastname = models.CharField(max_length=30, null=False)
     E_mail = models.EmailField(unique=True, null=False)

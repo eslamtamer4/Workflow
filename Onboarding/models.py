@@ -19,9 +19,10 @@ MARITAL_STATUS_CHOICES = [
         ('single', 'Single'),
     ]
 STATUS_CHOICES = [
-        ('ACCEPT', 'Accept'),
-        ('REJECT', 'Reject '),
-        ('PENDING', 'Pending'),
+        ('ACCEPT', 'ACCEPT'),
+        ('REJECTED', 'REJECTED'),
+        ('Awaiting HR Approval', 'Awaiting HR Approval'),
+        ('Awaiting Supervisor Approval', 'Awaiting Supervisor Approval'),
     ]
 
 
@@ -55,7 +56,7 @@ class On_Boarding_Request(models.Model):
     Assigned_to = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     HR_comment=models.TextField(verbose_name='HR Comment',null=True)
     Technical_comment=models.TextField(verbose_name='Technical Comment',null=True)
-    Status= models.CharField(max_length=50, choices=STATUS_CHOICES, verbose_name='Status',default='PENDING')
+    Status= models.CharField(max_length=50, choices=STATUS_CHOICES, verbose_name='Status',default='Awaiting HR Approval')
 
 
     def __str__(self):

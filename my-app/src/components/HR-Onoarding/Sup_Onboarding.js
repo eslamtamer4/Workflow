@@ -3,15 +3,24 @@ import axios from "axios";
 import Modal from "react-modal";
 import "./HR_Onboarding.css";
 
-const HR_Onboarding = () => {
+const Sup_Onboarding = () => {
   const [onboardingRequests, setOnboardingRequests] = useState([]);
-  const [employeeList, setEmployeeList] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
-    // Fetch onboarding requests from the backend
-    axios.get("http://127.0.0.1:8000/Onboarding/Get_Onboarding_requests/")
+    const token = localStorage.getItem('token'); // Assuming your token key is 'token'
+  
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+    console.log('test')
+    console.log(token)
+    console.log('last')  
+    // Fetch onboarding requests from the backend with the token in the header
+    axios.get("http://127.0.0.1:8000/Onboarding/Get_Onboarding_requests_Sup/", config)
       .then(response => {
         setOnboardingRequests(response.data);
       })
@@ -20,16 +29,6 @@ const HR_Onboarding = () => {
       });
   }, []);
 
-  useEffect(() => {
-    // Fetch employee list from the backend
-    axios.get("http://127.0.0.1:8000/Onboarding/Get_Employee_List/")
-      .then(response => {
-        setEmployeeList(response.data);
-      })
-      .catch(error => {
-        console.error("Error fetching employee list:", error);
-      });
-  }, []);
 
   const openModal = (request) => {
     setSelectedRequest(request);
@@ -44,25 +43,29 @@ const HR_Onboarding = () => {
   const handleCommentChange = (event) => {
     setSelectedRequest(prevState => ({
       ...prevState,
-      HR_comment: event.target.value
+      Technical_comment: event.target.value
     }));
   };
 
-  const handleAssignToChange = (event) => {
-    setSelectedRequest(prevState => ({
-      ...prevState,
-      Assigned_to: event.target.value
-    }));
-  };
 
-  const handleSaveChanges = () => {
-    // Update HR comment and Assigned To in the backend
-    axios.put(`http://127.0.0.1:8000/Onboarding/Update_Onboarding_request/${selectedRequest.id}/`, selectedRequest)
+  const handleSaveChanges = (action) => {
+    const token = localStorage.getItem('token'); // Assuming your token key is 'token'
+  
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+    // Create a copy of the selected request with the updated status
+    const updatedRequest = { ...selectedRequest, Status: action  };
+  
+    // Update the onboarding request in the backend
+    axios.put(`http://127.0.0.1:8000/Onboarding/Update_Onboarding_request_sup/${selectedRequest.id}/`, { ...updatedRequest, action },config)
       .then(response => {
         // Update the onboarding request in the state
         setOnboardingRequests(prevState =>
           prevState.map(request =>
-            request.id === selectedRequest.id ? selectedRequest : request
+            request.id === selectedRequest.id ? updatedRequest : request
           )
         );
         closeModal();
@@ -111,13 +114,7 @@ const HR_Onboarding = () => {
             <p>Referred By: {selectedRequest.referred_by}</p>
             <p>Expected Salary: {selectedRequest.expected_salary}</p>
             <p>Notice Period: {selectedRequest.notice_period}</p>
-            <p>
-                Technical Comment:{" "}
-                {selectedRequest.Technical_comment
-                    ? selectedRequest.Technical_comment
-                    : "To be determined by the supervisor"}
-            </p>
-
+            <p>Hr Comments: {selectedRequest.HR_comment}</p>
             {selectedRequest.experiences.map((experience, expIndex) => (
                 <div key={expIndex}>
                   <p>Employer: {experience.employer}</p>
@@ -128,26 +125,17 @@ const HR_Onboarding = () => {
                   <p>Leave Reason: {experience.leave_reason}</p>
                 </div>
               ))}
-                {selectedRequest.Status !== 'Rejected' && selectedRequest.Status !== 'Accepted' && (
-                    <div>
-                        <textarea
-                            value={selectedRequest.HR_comment}
-                            onChange={handleCommentChange}
-                        />
-                        <select
-                            value={selectedRequest.Assigned_to}
-                            onChange={handleAssignToChange}
-                        >
-                            <option value="">Select Employee</option>
-                            {employeeList.map(employee => (
-                                <option key={employee.id} value={employee.id}>
-                                    {employee.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                )}
-            <button onClick={handleSaveChanges}>Save Changes</button>
+            <textarea
+              value={selectedRequest.Technical_comment}
+              onChange={handleCommentChange}
+            />
+            {/* Input for Assigned To */}
+            
+            <div>
+                <button onClick={() => handleSaveChanges('Accept')}>Accept</button>
+                <button onClick={() => handleSaveChanges('Reject')}>Reject</button>
+                <button onClick={closeModal}>Cancel</button>
+            </div>
           </div>
         )}
       </Modal>
@@ -155,4 +143,4 @@ const HR_Onboarding = () => {
   );
 };
 
-export default HR_Onboarding;
+export default Sup_Onboarding;
