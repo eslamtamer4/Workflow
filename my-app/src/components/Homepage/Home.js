@@ -4,16 +4,41 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const [user, setUser] = useState({});
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
 
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
+  const handleLogout = async () => {
 
     const config = {
       headers: {
         Authorization: `Bearer ${token}`
       }
     };
+    console.log(token)
+
+      try {
+        await axios.post("http://127.0.0.1:8000/Authentication/logout/", config) // Call your logout API endpoint
+        localStorage.removeItem('token'); // Remove access token
+        navigate('/'); // Navigate to the login page
+      } catch (error) {
+        console.error('Logout failed:', error);
+      }
+  };
+
+  useEffect(() => {
+    console.log(token)
+    // Check if the user is logged in
+    if (!token) {
+      console.log('seif')
+      navigate("/Access_Denied");
+      return;
+    }
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    };
+
 
     // Fetch user data from the backend API
     axios.get("http://127.0.0.1:8000/Authentication/Get_user/", config)  // Replace with your actual API endpoint
@@ -51,6 +76,7 @@ const Home = () => {
       <p>Modified Date: {user.Modified_date}</p>
       <p>Is HR: {user.Is_HR ? "Yes" : "No"}</p>
     </div>
+    <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };

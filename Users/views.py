@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.tokens import default_token_generator
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.authtoken.models import Token
@@ -9,6 +9,8 @@ from .models import User
 from django.contrib.auth import authenticate
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
+
+
 @api_view(['POST'])
 def login_view(request):
     email = request.data.get("email")
@@ -33,6 +35,11 @@ def login_view(request):
             return Response({"error"}, status=400)
     else:
         return Response({"error": "User does not exist"}, status=400)
+
+@api_view(['POST'])
+def logout_view(request):
+    logout(request)
+    return Response({"message": "Logged out successfully"})
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

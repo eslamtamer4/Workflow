@@ -213,12 +213,12 @@ def update_onboarding_request(request, request_id):
                 onboarding_request.Status='Awaiting Supervisor Approval'
 
                 # Send an email to the assigned user
-                subject = 'Onboarding Request Awaiting Approval'
-                message = f'There is an onboarding request awaiting your approval.\nRequest ID: {onboarding_request.id}'
-                from_email = config('EMAIL_HOST_USER')  # Use the email from the environment variable
-                recipient_list = [new_assigned_to.E_mail]
+                # subject = 'Onboarding Request Awaiting Approval'
+                # message = f'There is an onboarding request awaiting your approval.\nRequest ID: {onboarding_request.id}'
+                # from_email = config('EMAIL_HOST_USER')  # Use the email from the environment variable
+                # recipient_list = [new_assigned_to.E_mail]
 
-                send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+                # send_mail(subject, message, from_email, recipient_list, fail_silently=False)
 
             except User.DoesNotExist:
                 return JsonResponse({'error': 'Employee not found'}, status=400)
@@ -253,22 +253,20 @@ def update_onboarding_request_sup(request, request_id):
 
         hr_users = User.objects.filter(Is_HR=True)
 
-        print(hr_users)
+        # subject = f'Onboarding Request Review: {onboarding_request.Status}'
+        # message = (
+        #         f'Supervisor reviewed the HR comment for Onboarding Request ID: {onboarding_request.id}\n'
+        #         f'Status: {onboarding_request.Status}\n'
+        #         f'Applicant Name: {onboarding_request.name}\n'
+        #         f'Position Applying For: {onboarding_request.position_applying_for}\n'
+        #         f'Education: {onboarding_request.education}\n'
+        #     )
 
-        subject = f'Onboarding Request Review: {onboarding_request.Status}'
-        message = (
-                f'Supervisor reviewed the HR comment for Onboarding Request ID: {onboarding_request.id}\n'
-                f'Status: {onboarding_request.Status}\n'
-                f'Applicant Name: {onboarding_request.name}\n'
-                f'Position Applying For: {onboarding_request.position_applying_for}\n'
-                f'Education: {onboarding_request.education}\n'
-            )
+        # from_email = config('EMAIL_HOST_USER')  # Replace with your email address
 
-        from_email = config('EMAIL_HOST_USER')  # Replace with your email address
-
-        for user in hr_users:
-            recipient_list = [user.E_mail]
-            send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+        # for user in hr_users:
+        #     recipient_list = [user.E_mail]
+        #     send_mail(subject, message, from_email, recipient_list, fail_silently=False)
 
         return JsonResponse({'message': 'Onboarding request updated successfully and emails sent to HR users'})
 
