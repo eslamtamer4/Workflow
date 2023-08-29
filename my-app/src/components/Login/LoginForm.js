@@ -31,29 +31,35 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="login-form-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit} className="login-form">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="input-field"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="input-field"
-        />
-        <button type="submit" className="submit-button">
+    <div className="login-container">
+
+        <div id="card">
+          <div id="card-content">
+            <div id="card-title">
+              <h2>LOGIN</h2>
+              <div class="underline-title"></div>
+            </div>
+            <form method="post" class="form" onSubmit={handleSubmit}>
+              <label for="user-email" style={{paddingTop: '22px'}}>
+                  &nbsp;Email
+                </label>
+              <input id="user-email" class="form-content" type="email" name="email" placeholder="Email" autocomplete="on" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <div class="form-border"></div>
+              <label for="user-password" style={{paddingTop: '22px'}}>&nbsp;Password
+                </label>
+              <input id="user-password" class="form-content" type="password" name="password" required  value={password} onChange={(e) => setPassword(e.target.value)}/>
+              <div class="form-border"></div>
+              <a href="#">
+                <legend id="forgot-pass">Forgot password?</legend>
+              </a>
+        <button type="submit" id="submit-btn">
           Login
         </button>
-      </form>
-      <ToastContainer />
-    </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
   );
 };
 
