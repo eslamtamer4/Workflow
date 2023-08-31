@@ -7,6 +7,7 @@ import OnboardingForm from './components/Onboarding/Onboarding_form';
 import HR_Onboarding from './components/HR-Onoarding/HR_Onboarding';
 import Sup_Onboarding from './components/HR-Onoarding/Sup_Onboarding';
 import AccessDenied from './components/Access/AccessDenied'; 
+import SuccessPage from './components/SuccessPage/SuccessPage';
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
               <Route path='/HR_Onboarding' element={<HR_Onboarding/>}/>
               <Route path='/Sup_Onboarding' element={<Sup_Onboarding/>}/>
               <Route path='/Access_Denied' element={<AccessDenied/>}/>
+              <Route path='/Success_Page' element={<SuccessPage/>}/>
         </Routes>
       </div>
   );

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "./Home.css";
+
 const Home = () => {
   const [user, setUser] = useState({});
   const navigate = useNavigate();
@@ -60,23 +62,26 @@ const Home = () => {
 
 
   return (
-    <div className="home-container">
-      <h2>Welcome to the Homepage</h2>
-      <p>This is the homepage of your application.</p>
-      <button onClick={handleNavigateButtonClick}>Onboarding Requests</button>
-      <div>
-      <h2>User Profile</h2>
-      <p>ID: {user.id}</p>
-      <p>Username: {user.Username}</p>
-      <p>First Name: {user.Firstname}</p>
-      <p>Last Name: {user.Lastname}</p>
-      <p>Email: {user.E_mail}</p>
-      <p>Is Active: {user.Is_active ? "Yes" : "No"}</p>
-      <p>Created Date: {user.Created_date}</p>
-      <p>Modified Date: {user.Modified_date}</p>
-      <p>Is HR: {user.Is_HR ? "Yes" : "No"}</p>
-    </div>
-    <button onClick={handleLogout}>Logout</button>
+<div className="home-container">
+      <h2 className="home-header">Welcome to the Homepage</h2>
+      <p className="home-paragraph">This is the homepage of your application.</p>
+      <h2 className="navigate-title">Navigate to Onboarding Requests</h2>
+      <button className="navigate-button" onClick={handleNavigateButtonClick}>
+        Onboarding Requests
+      </button>
+      <div className="user-profile">
+        <h2 className="user-info">User Profile</h2>
+        <p className="user-info">ID: {user.id}</p>
+        <p className="user-info">Username: {user.Username}</p>
+        <p className="user-info">First Name: {user.Firstname}</p>
+        <p className="user-info">Last Name: {user.Lastname}</p>
+        <p className="user-info">Email: {user.E_mail}</p>
+        <p className="user-info">Is Active: {user.Is_active ? "Yes" : "No"}</p>
+        <p className="user-info">Created Date: {user.Created_date}</p>
+        <p className="user-info">Modified Date: {user.Modified_date}</p>
+        <p className="user-info">Is HR: {user.Is_HR ? "Yes" : "No"}</p>
+      </div>
+      <button className="logout-button" onClick={handleLogout}>Logout</button>
     </div>
   );
 };

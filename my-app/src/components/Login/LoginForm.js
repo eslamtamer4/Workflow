@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,6 +9,14 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/home");
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,19 +47,17 @@ const LoginForm = () => {
               <h2>LOGIN</h2>
               <div class="underline-title"></div>
             </div>
-            <form method="post" class="form" onSubmit={handleSubmit}>
+            <form method="post" class="form-login" onSubmit={handleSubmit}>
               <label for="user-email" style={{paddingTop: '22px'}}>
                   &nbsp;Email
                 </label>
-              <input id="user-email" class="form-content" type="email" name="email" placeholder="Email" autocomplete="on" value={email} onChange={(e) => setEmail(e.target.value)} />
-              <div class="form-border"></div>
+              <input id="user-email" class="form-login-content" type="email" name="email" placeholder="Email" autocomplete="on" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <div class="form-login-border"></div>
               <label for="user-password" style={{paddingTop: '22px'}}>&nbsp;Password
                 </label>
-              <input id="user-password" class="form-content" type="password" name="password" required  value={password} onChange={(e) => setPassword(e.target.value)}/>
-              <div class="form-border"></div>
-              <a href="#">
-                <legend id="forgot-pass">Forgot password?</legend>
-              </a>
+              <input id="user-password" class="form-login-content" type="password" name="password" required  value={password} onChange={(e) => setPassword(e.target.value)}/>
+              <div class="form-login-border"></div>
+
         <button type="submit" id="submit-btn">
           Login
         </button>

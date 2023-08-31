@@ -119,6 +119,7 @@ def Get_Onboarding_requests(request):
                 'HR_comment': request.HR_comment,
                 'Technical_comment': request.Technical_comment,
                 'Status': request.Status,
+                'Rejection_reason':request.Rejection_reason,
                 'experiences': [],
             }
             for experience in request.experiences.all():
@@ -203,7 +204,11 @@ def update_onboarding_request(request, request_id):
     if request.method == 'PUT':
         new_hr_comment = request.data.get('HR_comment')
         new_assigned_to_id = request.data.get('Assigned_to')
+        new_rejection_reason=request.data.get('Rejection_reason')
 
+        if new_rejection_reason is not None:
+           onboarding_request.Rejection_reason=new_rejection_reason
+           onboarding_request.Status='Rejected'
         if new_hr_comment is not None:
             onboarding_request.HR_comment = new_hr_comment
         if new_assigned_to_id is not None:
@@ -251,7 +256,7 @@ def update_onboarding_request_sup(request, request_id):
 
         onboarding_request.save()
 
-        hr_users = User.objects.filter(Is_HR=True)
+        # hr_users = User.objects.filter(Is_HR=True)
 
         # subject = f'Onboarding Request Review: {onboarding_request.Status}'
         # message = (

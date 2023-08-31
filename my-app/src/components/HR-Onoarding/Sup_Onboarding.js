@@ -47,6 +47,17 @@ const Sup_Onboarding = () => {
     }));
   };
 
+  function getStatusClassName(status) {
+    if (status === 'Awaiting HR Approval') {
+      return 'AwaitingHRApproval';
+    } else if (status === 'Accepted') {
+      return 'Accepted';
+    } else if (status === 'Rejected') {
+      return 'Rejected';
+    }
+    return '';
+  };
+
 
   const handleSaveChanges = (action) => {
     const token = localStorage.getItem('token'); // Assuming your token key is 'token'
@@ -79,24 +90,34 @@ const Sup_Onboarding = () => {
     <div>
       <h2>HR Onboarding Requests</h2>
       {onboardingRequests.map(request => (
-        <div key={request.id} className="card">
-          <div className="card-header" onClick={() => openModal(request)}>
+        <div
+          key={request.id}
+          className="card"
+          onClick={() => openModal(request)}
+        >
+          <div className="card-header">
             <h3>{request.name}</h3>
             <p>Application Date: {request.application_date}</p>
             <p>Position: {request.position_applying_for}</p>
-            <p>Status: {request.Status}</p>
+            <p className={`status-${getStatusClassName(request.Status)}`}>{request.Status}</p>
           </div>
         </div>
       ))}
       <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Onboarding Request Details"
+      isOpen={modalIsOpen}
+      onRequestClose={closeModal}
+      contentLabel="Onboarding Request Details"
+      className="modal-overlay"
+      shouldCloseOnOverlayClick={true}
       >
         {selectedRequest && (
-          <div>
-            {/* Display detailed information */}
+          <div className="modal-content">
+          <div className="modal-header">
             <h2>{selectedRequest.name}</h2>
+            <button className="close-button" onClick={closeModal}>Close</button>
+          </div>
+          <div className="modal-body">
+            {/* Display detailed information */}
             <p>Email: {selectedRequest.email}</p>
             <p>Phone Number: {selectedRequest.phone_number}</p>
             <p>Address: {selectedRequest.address}</p>
@@ -114,7 +135,6 @@ const Sup_Onboarding = () => {
             <p>Referred By: {selectedRequest.referred_by}</p>
             <p>Expected Salary: {selectedRequest.expected_salary}</p>
             <p>Notice Period: {selectedRequest.notice_period}</p>
-            <p>Hr Comments: {selectedRequest.HR_comment}</p>
             {selectedRequest.experiences.map((experience, expIndex) => (
                 <div key={expIndex}>
                   <p>Employer: {experience.employer}</p>
@@ -125,16 +145,71 @@ const Sup_Onboarding = () => {
                   <p>Leave Reason: {experience.leave_reason}</p>
                 </div>
               ))}
-            <textarea
-              value={selectedRequest.Technical_comment}
-              onChange={handleCommentChange}
-            />
-            {/* Input for Assigned To */}
-            
-            <div>
-                <button onClick={() => handleSaveChanges('Accept')}>Accept</button>
-                <button onClick={() => handleSaveChanges('Reject')}>Reject</button>
-                <button onClick={closeModal}>Cancel</button>
+            <div className="modal-section">
+              <h3>Hr Comments</h3>
+              <p>{selectedRequest.HR_comment}</p>
+            </div>
+            <div className="modal-section">
+              <h3>Technical Comment</h3>
+              {selectedRequest.Status === 'Accepted' || selectedRequest.Status === 'Rejected' ? (
+                <p>{selectedRequest.Technical_comment}</p>
+              ) : (
+                <textarea
+                  value={selectedRequest.Technical_comment}
+                  onChange={handleCommentChange}
+                />
+              )}
+            </div>
+
+            {selectedRequest.Status === 'Awaiting Supervisor Approval' && (
+              <div>
+              <button
+  onClick={() => handleSaveChanges('Accept')}
+  disabled={!selectedRequest.Technical_comment || !selectedRequest.Technical_comment.trim()}
+  style={{
+    padding: '10px 20px',
+    backgroundColor: !selectedRequest.Technical_comment || !selectedRequest.Technical_comment.trim() ? 'gray' : 'green',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: !selectedRequest.Technical_comment || !selectedRequest.Technical_comment.trim() ? 'not-allowed' : 'pointer',
+    fontSize: '16px',
+    marginRight: '10px'
+  }}
+>
+  Accept
+</button>
+<button
+  onClick={() => handleSaveChanges('Reject')}
+  disabled={!selectedRequest.Technical_comment || !selectedRequest.Technical_comment.trim()}
+  style={{
+    padding: '10px 20px',
+    backgroundColor: !selectedRequest.Technical_comment || !selectedRequest.Technical_comment.trim() ? 'gray' : 'red',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: !selectedRequest.Technical_comment || !selectedRequest.Technical_comment.trim() ? 'not-allowed' : 'pointer',
+    fontSize: '16px'
+  }}
+>
+  Reject
+</button>
+<button
+  onClick={closeModal}
+  style={{
+    padding: '10px 20px',
+    backgroundColor: 'gray',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontSize: '16px'
+  }}
+>
+  Cancel
+</button>
+            </div>
+            )}
             </div>
           </div>
         )}

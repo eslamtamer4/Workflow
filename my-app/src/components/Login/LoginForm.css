@@ -55,17 +55,17 @@ label {
 #submit-btn:hover {
   box-shadow: 0px 1px 18px #87CEEB;
 }
-.form {
+.form-login {
   align-items: left;
   display: flex;
   flex-direction: column;
 }
-.form-border {
+.form-login-border {
   background: -webkit-linear-gradient(right, #001f3f, #87CEEB);
   height: 1px;
   width: 100%;
 }
-.form-content {
+.form-login-content {
   background: #fbfbfb;
   border: none;
   outline: none;
@@ -76,4 +76,5 @@ label {
   height: 2px;
   margin: -1.1rem auto 0 auto;
   width: 89px;
+  margin-top: 2px;
 }

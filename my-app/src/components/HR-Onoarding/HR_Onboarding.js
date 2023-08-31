@@ -8,12 +8,15 @@ const HR_Onboarding = () => {
   const [employeeList, setEmployeeList] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [actionClicked, setActionClicked] = useState(null);
+
 
   useEffect(() => {
     // Fetch onboarding requests from the backend
     axios.get("http://127.0.0.1:8000/Onboarding/Get_Onboarding_requests/")
       .then(response => {
         setOnboardingRequests(response.data);
+        console.log(response.data)
       })
       .catch(error => {
         console.error("Error fetching onboarding requests:", error);
@@ -48,11 +51,33 @@ const HR_Onboarding = () => {
     }));
   };
 
+  const handleRejectionReasonChange = (event) => {
+    setSelectedRequest(prevState => ({
+      ...prevState,
+      Rejection_reason: event.target.value
+    }));
+  };
+
   const handleAssignToChange = (event) => {
     setSelectedRequest(prevState => ({
       ...prevState,
       Assigned_to: event.target.value
     }));
+  };
+
+  const handleActionClick = (action) => {
+    setActionClicked(action);
+  };
+
+  function getStatusClassName(status) {
+    if (status === 'Awaiting HR Approval') {
+      return 'AwaitingHRApproval';
+    } else if (status === 'Accepted') {
+      return 'Accepted';
+    } else if (status === 'Rejected') {
+      return 'Rejected';
+    }
+    return '';
   };
 
   const handleSaveChanges = () => {
@@ -74,26 +99,35 @@ const HR_Onboarding = () => {
 
   return (
     <div>
-      <h2>HR Onboarding Requests</h2>
-      {onboardingRequests.map(request => (
-        <div key={request.id} className="card">
-          <div className="card-header" onClick={() => openModal(request)}>
+    <h2>HR Onboarding Requests</h2>
+    {onboardingRequests.map(request => (
+        <div
+          key={request.id}
+          className="card"
+          onClick={() => openModal(request)}
+        >
+          <div className="card-header">
             <h3>{request.name}</h3>
             <p>Application Date: {request.application_date}</p>
             <p>Position: {request.position_applying_for}</p>
-            <p>Status: {request.Status}</p>
+            <p className={`status-${getStatusClassName(request.Status)}`}>{request.Status}</p>
           </div>
         </div>
       ))}
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Onboarding Request Details"
-      >
-        {selectedRequest && (
-          <div>
-            {/* Display detailed information */}
+    <Modal
+      isOpen={modalIsOpen}
+      onRequestClose={closeModal}
+      contentLabel="Onboarding Request Details"
+      className="modal-overlay"
+      shouldCloseOnOverlayClick={true}
+    >
+      {selectedRequest && (
+        <div className="modal-content">
+          <div className="modal-header">
             <h2>{selectedRequest.name}</h2>
+            <button className="close-button" onClick={closeModal}>Close</button>
+          </div>
+          <div className="modal-body">
             <p>Email: {selectedRequest.email}</p>
             <p>Phone Number: {selectedRequest.phone_number}</p>
             <p>Address: {selectedRequest.address}</p>
@@ -111,47 +145,107 @@ const HR_Onboarding = () => {
             <p>Referred By: {selectedRequest.referred_by}</p>
             <p>Expected Salary: {selectedRequest.expected_salary}</p>
             <p>Notice Period: {selectedRequest.notice_period}</p>
-            <p>
-                Technical Comment:{" "}
-                {selectedRequest.Technical_comment
-                    ? selectedRequest.Technical_comment
-                    : "To be determined by the supervisor"}
-            </p>
-
             {selectedRequest.experiences.map((experience, expIndex) => (
-                <div key={expIndex}>
-                  <p>Employer: {experience.employer}</p>
-                  <p>Title: {experience.title}</p>
-                  <p>From Date: {experience.from_date}</p>
-                  <p>To Date: {experience.to_date}</p>
-                  <p>Gross Salary: {experience.gross_salary}</p>
-                  <p>Leave Reason: {experience.leave_reason}</p>
-                </div>
-              ))}
-                {selectedRequest.Status !== 'Rejected' && selectedRequest.Status !== 'Accepted' && (
-                    <div>
-                        <textarea
-                            value={selectedRequest.HR_comment}
-                            onChange={handleCommentChange}
-                        />
-                        <select
-                            value={selectedRequest.Assigned_to}
-                            onChange={handleAssignToChange}
-                        >
-                            <option value="">Select Employee</option>
-                            {employeeList.map(employee => (
-                                <option key={employee.id} value={employee.id}>
-                                    {employee.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+              <div key={expIndex} className="modal-section">
+                <h3>Experience {expIndex + 1}</h3>
+                <p>Employer: {experience.employer}</p>
+                <p>Title: {experience.title}</p>
+                <p>From Date: {experience.from_date}</p>
+                <p>To Date: {experience.to_date}</p>
+                <p>Gross Salary: {experience.gross_salary}</p>
+                <p>Leave Reason: {experience.leave_reason}</p>
+              </div>
+            ))}
+                {selectedRequest.Status === 'Awaiting HR Approval' && !actionClicked && (
+                  <div className="modal-section" style={{ marginTop: '20px' }}>
+                    <button
+                      onClick={() => handleActionClick('accept')}
+                      style={{ backgroundColor: 'green', color: 'white', marginRight: '10px' }}
+                    >
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => handleActionClick('reject')}
+                      style={{ backgroundColor: 'red', color: 'white' }}
+                    >
+                      Reject
+                    </button>
+                  </div>
                 )}
-            <button onClick={handleSaveChanges}>Save Changes</button>
+                {actionClicked === 'accept' && (
+                  <div>
+                  <div className="modal-section">
+                    <div className="modal-section">
+                      <h3>HR Comment</h3>
+                      <textarea
+                        value={selectedRequest.HR_comment}
+                        onChange={handleCommentChange}
+                      />
+                    </div>
+
+                    <div className="modal-section">
+                      <h3>Assigned To</h3>
+                      <select
+                        value={selectedRequest.Assigned_to}
+                        onChange={handleAssignToChange}
+                      >
+                        <option value="">Select Employee</option>
+                        {employeeList.map(employee => (
+                          <option key={employee.id} value={employee.id}>
+                            {employee.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                    <div className="button-container">
+                    <button onClick={handleSaveChanges}>Save Changes</button>
+                  </div>
+                  </div>
+
+                  
+                )}
+                {actionClicked === 'reject' && (
+                  <div>
+                  <div className="modal-section">
+                    <h3>Rejection Reason</h3>
+                    <textarea
+                      value={selectedRequest.Rejection_reason}
+                      onChange={handleRejectionReasonChange}
+                    />
+                  </div>
+                  <div className="button-container">
+                    <button onClick={handleSaveChanges}>Save Changes</button>
+                  </div>
+                </div>
+                  
+                )}
+
+                {(selectedRequest && (selectedRequest.Status === 'Accepted' || selectedRequest.Status === 'Rejected')) && (
+                  <div className="modal-section">
+                    <h3>HR Comment</h3>
+                    <p>{selectedRequest.HR_comment || "HR Rejected"}</p>
+                  </div>
+                )}
+
+                {(selectedRequest && (selectedRequest.Status === 'Accepted' || selectedRequest.Status === 'Rejected')) && (
+                  <div className="modal-section">
+                    <h3>Techincal Comment</h3>
+                    <p>{selectedRequest.Technical_comment || "HR Rejected"}</p>
+                  </div>
+                )}
+
+                {(selectedRequest && (selectedRequest.Status === 'Accepted' || selectedRequest.Status === 'Rejected')) && (
+                  <div className="modal-section">
+                    <h3>Assigned To</h3>
+                    <p>{selectedRequest.Assigned_to || "HR Rejected"}</p>
+                  </div>
+                )}
           </div>
-        )}
-      </Modal>
-    </div>
+        </div>
+      )}
+    </Modal>
+  </div>
   );
 };
 
