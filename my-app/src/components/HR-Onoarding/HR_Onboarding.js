@@ -42,6 +42,7 @@ const HR_Onboarding = () => {
   const closeModal = () => {
     setSelectedRequest(null);
     setModalIsOpen(false);
+    setActionClicked(null)
   };
 
   const handleCommentChange = (event) => {
@@ -100,6 +101,7 @@ const HR_Onboarding = () => {
   return (
     <div>
     <h2>HR Onboarding Requests</h2>
+    <div class="grid-container">
     {onboardingRequests.map(request => (
         <div
           key={request.id}
@@ -114,6 +116,7 @@ const HR_Onboarding = () => {
           </div>
         </div>
       ))}
+      </div>
     <Modal
       isOpen={modalIsOpen}
       onRequestClose={closeModal}
@@ -160,13 +163,46 @@ const HR_Onboarding = () => {
                   <div className="modal-section" style={{ marginTop: '20px' }}>
                     <button
                       onClick={() => handleActionClick('accept')}
-                      style={{ backgroundColor: 'green', color: 'white', marginRight: '10px' }}
+                      style={{
+                        backgroundColor: 'green',
+                        color: 'white',
+                        marginRight: '10px',
+                        padding: '8px 16px',
+                        border: '1px solid green',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.3s, color 0.3s, border-color 0.3s',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = 'white';
+                        e.target.style.color='green'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = 'green';
+                        e.target.style.color='white'
+                      }}
                     >
                       Accept
                     </button>
                     <button
                       onClick={() => handleActionClick('reject')}
-                      style={{ backgroundColor: 'red', color: 'white' }}
+                      style={{
+                        backgroundColor: 'red',
+                        color: 'white',
+                        padding: '8px 16px',
+                        border: '1px solid red',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.3s, color 0.3s, border-color 0.3s',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = 'white';
+                        e.target.style.color='red'
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = 'red';
+                        e.target.style.color='white'
+                      }}
                     >
                       Reject
                     </button>
